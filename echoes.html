@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echoes. by rush — Social Mirror & Reflection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Surface & Canvas */
+      --bg-canvas: #f4f5f7;
+      --bg-dot: #dfe2e7;
+      --surface-primary: #ffffff;
+      --surface-secondary: #f8f9fb;
+      --surface-tertiary: #f1f3f6;
+      
+      /* Borders */
+      --border-subtle: rgba(15, 23, 42, 0.08);
+      --border-strong: rgba(15, 23, 42, 0.16);
+
+      /* Typography */
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      /* Brand & Semantic Accents */
+      --accent-primary: #2563eb;
+      --accent-primary-hover: #1d4ed8;
+      --accent-soft: #eff6ff;
+
+      --tone-empathy: #10b981;
+      --tone-empathy-soft: #ecfdf5;
+      --tone-guarded: #f59e0b;
+      --tone-guarded-soft: #fffbeb;
+      --tone-dominant: #ef4444;
+      --tone-dominant-soft: #fef2f2;
+
+      /* Elevation & Motion */
+      --shadow-shell: 0 24px 64px -12px rgba(15, 23, 42, 0.08), 0 4px 16px -4px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* Spacing & Radii */
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      background-image: radial-gradient(var(--bg-dot) 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Main Application Shell */
+    .app-container {
+      width: 100%;
+      max-width: 680px;
+      min-height: 640px;
+      background: var(--surface-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-shell);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Architectural Top Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      flex-direction: column;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s var(--spring);
+    }
+
+    .brand-mark:hover {
+      transform: translateY(-1px);
+    }
+
+    .brand-name {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .brand-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      padding-left: 4px;
+    }
+
+    .tricolor {
+      display: inline-flex;
+      gap: 2px;
+    }
+
+    .tricolor span {
+      width: 4px;
+      height: 7px;
+      border-radius: 1.5px;
+    }
+
+    /* Step Progress Indicator */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-dot {
+      height: 5px;
+      width: 18px;
+      border-radius: 99px;
+      background: var(--surface-tertiary);
+      transition: all 0.35s var(--spring);
+    }
+
+    .step-dot.completed {
+      background: #93c5fd;
+    }
+
+    .step-dot.active {
+      width: 32px;
+      background: var(--accent-primary);
+    }
+
+    .header-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s var(--spring);
+    }
+
+    .icon-btn:hover {
+      background: var(--surface-tertiary);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    /* View Transitions & Stagger Animations */
+    .view {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      padding: 32px 28px;
+    }
+
+    .view.active {
+      display: flex;
+    }
+
+    .stagger-1 { animation: slideUp 0.45s var(--spring) both; animation-delay: 0.03s; }
+    .stagger-2 { animation: slideUp 0.45s var(--spring) both; animation-delay: 0.08s; }
+    .stagger-3 { animation: slideUp 0.45s var(--spring) both; animation-delay: 0.14s; }
+    .stagger-4 { animation: slideUp 0.45s var(--spring) both; animation-delay: 0.20s; }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Typography Hierarchy */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-primary);
+      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: var(--text-primary);
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+
+    .body-lead {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 500px;
+    }
+
+    /* Primary & Secondary CTA Buttons */
+    .btn-primary {
+      background: var(--text-primary);
+      color: #ffffff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.25s var(--spring);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* VIEW 1: LANDING */
+    .landing-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .landing-center {
+      margin: auto 0;
+      padding: 16px 0;
+    }
+
+    .concept-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .concept-pill {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .concept-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .landing-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      gap: 16px;
+    }
+
+    .privacy-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 280px;
+      line-height: 1.4;
+    }
+
+    /* VIEW 2: MODULE SELECTION (12-Col Grid) */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 24px 0 20px;
+    }
+
+    .module-tile {
+      background: var(--surface-secondary);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 168px;
+      cursor: pointer;
+      transition: all 0.25s var(--spring);
+      position: relative;
+    }
+
+    .module-tile:hover {
+      background: var(--surface-primary);
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .module-tile.selected {
+      background: var(--accent-soft);
+      border-color: var(--accent-primary);
+      box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.18);
+    }
+
+    .tile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tile-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--surface-primary);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      transition: all 0.25s var(--spring);
+    }
+
+    .module-tile.selected .tile-icon {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .tile-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tile-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin-top: 18px;
+    }
+
+    .tile-meta {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .briefing-card {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .briefing-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--surface-primary);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .briefing-text {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    /* VIEW 3: SIMULATION */
+    .sim-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .chat-viewport {
+      flex: 1;
+      min-height: 240px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-right: 6px;
+      margin-bottom: 18px;
+    }
+
+    .chat-viewport::-webkit-scrollbar {
+      width: 5px;
+    }
+    .chat-viewport::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 99px;
+    }
+
+    .bubble-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      animation: slideUp 0.35s var(--spring) both;
+    }
+
+    .bubble-row.user {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--surface-tertiary);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+
+    .bubble-row.user .avatar {
+      background: var(--text-primary);
+      color: #ffffff;
+    }
+
+    .bubble {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      padding: 12px 16px;
+      border-radius: 14px;
+      border-top-left-radius: 4px;
+      max-width: 78%;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .bubble-row.user .bubble {
+      background: var(--accent-soft);
+      border-color: rgba(37, 99, 235, 0.2);
+      border-top-left-radius: 14px;
+      border-top-right-radius: 4px;
+    }
+
+    .speaker-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .response-dock {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+    }
+
+    .dock-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .reply-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .reply-card {
+      background: var(--surface-primary);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s var(--spring);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .reply-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+
+    .reply-card.active {
+      border-color: var(--accent-primary);
+      background: var(--accent-soft);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    }
+
+    .reply-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .reply-card.active .reply-tag {
+      color: var(--accent-primary);
+    }
+
+    .reply-preview {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--text-primary);
+    }
+
+    /* VIEW 4: ECHO WALL */
+    .echo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 22px 0 26px;
+    }
+
+    .echo-item {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--text-primary);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.25s var(--spring);
+    }
+
+    .echo-item:hover {
+      transform: translateX(4px);
+    }
+
+    .echo-item.tone-empathetic { border-left-color: var(--tone-empathy); background: var(--tone-empathy-soft); }
+    .echo-item.tone-passive { border-left-color: var(--tone-guarded); background: var(--tone-guarded-soft); }
+    .echo-item.tone-defensive,
+    .echo-item.tone-arrogant { border-left-color: var(--tone-dominant); background: var(--tone-dominant-soft); }
+
+    .echo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .echo-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .echo-quote {
+      font-size: 15.5px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* VIEW 5: REFLECTION */
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0 14px;
+    }
+
+    .prompt-pill {
+      background: var(--surface-secondary);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-primary);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s var(--spring);
+    }
+
+    .prompt-pill:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-primary);
+    }
+
+    .prompt-pill.selected {
+      background: var(--text-primary);
+      color: #ffffff;
+      border-color: var(--text-primary);
+    }
+
+    .journal-field {
+      width: 100%;
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-primary);
+      resize: none;
+      height: 68px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s ease;
+    }
+
+    .journal-field:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      background: var(--surface-primary);
+    }
+
+    .mood-bar {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .mood-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .mood-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mood-btn {
+      background: none;
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 18px;
+      cursor: pointer;
+      opacity: 0.45;
+      transition: all 0.2s var(--spring);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mood-btn span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mood-btn.active {
+      opacity: 1;
+      background: var(--surface-primary);
+      border-color: var(--border-strong);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-card);
+    }
+
+    /* VIEW 6: DASHBOARD (Bento Grid) */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+      margin: 20px 0 24px;
+    }
+
+    .bento-card {
+      background: var(--surface-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-radial {
+      align-items: center;
+      text-align: center;
+    }
+
+    .ring-box {
+      position: relative;
+      width: 136px;
+      height: 136px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 12px;
+    }
+
+    .ring-value {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ring-num {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+    }
+
+    .ring-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: var(--surface-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 13px 15px;
+    }
+
+    .stat-k {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stat-v {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 3px;
+    }
+
+    .insight-banner {
+      grid-column: 1 / -1;
+      background: var(--accent-soft);
+      border: 1px solid rgba(37, 99, 235, 0.18);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      .app-header { padding: 16px 18px; }
+      .view { padding: 22px 18px; }
+      .module-grid,
+      .reply-grid,
+      .prompt-grid,
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .module-tile { min-height: auto; flex-direction: row; align-items: center; gap: 14px; }
+      .tile-title { margin-top: 0; }
+      .landing-footer { flex-direction: column; align-items: stretch; }
+      .mood-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Top Architectural Header -->
+    <header class="app-header">
+      <div class="brand-mark" onclick="navigate('landing')" title="Return to start">
+        <span class="brand-name">Echoes.</span>
+        <span class="brand-tag">
+          <span class="tricolor">
+            <span style="background:#ef4444;"></span>
+            <span style="background:#f59e0b;"></span>
+            <span style="background:#3b82f6;"></span>
+          </span>
+          by rush
+        </span>
+      </div>
+
+      <!-- 6-Stage Progress Stepper -->
+      <div class="stepper" id="stepper">
+        <div class="step-dot active" data-step="0"></div>
+        <div class="step-dot" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+        <div class="step-dot" data-step="4"></div>
+        <div class="step-dot" data-step="5"></div>
+      </div>
+
+      <div class="header-action" id="headerAction"></div>
+    </header>
+
+    <!-- 1. LANDING VIEW -->
+    <section class="view active" id="view-landing">
+      <div class="landing-layout">
+        <div class="landing-center">
+          <div class="eyebrow stagger-1">Social Mirror Prototype • v2.0</div>
+          <h1 class="hero-title stagger-2">Hear how the world<br>experiences you.</h1>
+          <p class="body-lead stagger-3" style="margin-top: 14px;">
+            Instead of telling someone they are defensive or self-centered, Echoes places you inside realistic social friction—then plays back the unspoken impact of your words.
+          </p>
+
+          <div class="concept-pills stagger-4">
+            <div class="concept-pill"><span class="dot" style="background:#2563eb;"></span>Social Mirror Theory</div>
+            <div class="concept-pill"><span class="dot" style="background:#10b981;"></span>Anonymous Echo Wall</div>
+            <div class="concept-pill"><span class="dot" style="background:#f59e0b;"></span>Zero Judgment Loop</div>
+          </div>
+        </div>
+
+        <div class="landing-footer stagger-4">
+          <p class="privacy-note">Private & local-first. Your dialogue choices and reflections never leave your browser.</p>
+          <button class="btn-primary" onclick="navigate('modules')">
+            Begin Reflection
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MODULE SELECTION VIEW -->
+    <section class="view" id="view-modules">
+      <div class="stagger-1">
+        <div class="eyebrow">Step 01 • Mirror Module</div>
+        <h2 class="section-title">Choose a situation to reflect on</h2>
+      </div>
+
+      <div class="module-grid stagger-2">
+        <div class="module-tile selected" data-mod="conflict" onclick="chooseModule('conflict')">
+          <div class="tile-top">
+            <div class="tile-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+            </div>
+            <span class="tile-index">01</span>
+          </div>
+          <div>
+            <div class="tile-title">Engage in a conflict</div>
+            <div class="tile-meta">Deadline friction • 2 turns</div>
+          </div>
+        </div>
+
+        <div class="module-tile" data-mod="group" onclick="chooseModule('group')">
+          <div class="tile-top">
+            <div class="tile-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="tile-index">02</span>
+          </div>
+          <div>
+            <div class="tile-title">Group Discussion</div>
+            <div class="tile-meta">Airtime & listening • 2 turns</div>
+          </div>
+        </div>
+
+        <div class="module-tile" data-mod="feedback" onclick="chooseModule('feedback')">
+          <div class="tile-top">
+            <div class="tile-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <span class="tile-index">03</span>
+          </div>
+          <div>
+            <div class="tile-title">Difficult Feedback</div>
+            <div class="tile-meta">Receiving critique • 2 turns</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="briefing-card stagger-3">
+        <span class="briefing-badge">CONTEXT</span>
+        <p class="briefing-text" id="briefingText">
+          A project deadline slipped and tensions rise during a quick team sync. Navigate blame, tone, and shared ownership.
+        </p>
+      </div>
+
+      <button class="btn-primary stagger-4" style="margin-top:auto;" onclick="beginSimulation()">
+        Enter Simulation
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </section>
+
+    <!-- 3. SIMULATION VIEW -->
+    <section class="view" id="view-simulation">
+      <div class="sim-meta-bar stagger-1">
+        <span class="eyebrow" style="margin:0;" id="simModuleLabel">SIMULATION • CONFLICT</span>
+        <span class="mono" style="font-size:11px; color:var(--text-secondary);" id="turnCounter">TURN 1 OF 2</span>
+      </div>
+
+      <div class="chat-viewport" id="chatViewport"></div>
+
+      <div class="response-dock stagger-2">
+        <div class="dock-label">
+          <span>CHOOSE HOW YOU RESPOND</span>
+          <span id="selectedHint">Select an option below</span>
+        </div>
+        <div class="reply-grid" id="replyGrid"></div>
+        <button class="btn-primary" id="sendReplyBtn" style="width:100%;" onclick="commitReply()" disabled>
+          Send Response
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. ECHO WALL VIEW -->
+    <section class="view" id="view-echowall">
+      <div class="stagger-1">
+        <div class="eyebrow">Step 03 • Anonymous Echo Wall</div>
+        <h2 class="section-title">Here’s how others might have perceived you</h2>
+      </div>
+
+      <div class="echo-stack stagger-2" id="echoStack"></div>
+
+      <button class="btn-primary stagger-3" style="margin-top:auto;" onclick="navigate('reflection')">
+        Reflect on Echoes
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </section>
+
+    <!-- 5. REFLECTION VIEW -->
+    <section class="view" id="view-reflection">
+      <div class="stagger-1">
+        <div class="eyebrow">Step 04 • Internal Calibration</div>
+        <h2 class="section-title">What did that feedback stir in you?</h2>
+      </div>
+
+      <div class="prompt-grid stagger-2">
+        <button class="prompt-pill selected" onclick="pickPrompt(this)">“I didn't realize my tone felt dismissive.”</button>
+        <button class="prompt-pill" onclick="pickPrompt(this)">“I wanted to be right more than I wanted to listen.”</button>
+        <button class="prompt-pill" onclick="pickPrompt(this)">“I felt defensive at first, then understood.”</button>
+        <button class="prompt-pill" onclick="pickPrompt(this)">“Next time, I would pause and ask a question.”</button>
+      </div>
+
+      <textarea class="journal-field stagger-3" id="journalInput" placeholder="Write a quick private note to your future self (optional)..."></textarea>
+
+      <div class="mood-bar stagger-3">
+        <span class="mood-label">Emotional resonance after reading echoes:</span>
+        <div class="mood-controls">
+          <button class="mood-btn" data-mood="0" onclick="pickMood(0)">☹️ <span>Unsettled</span></button>
+          <button class="mood-btn" data-mood="1" onclick="pickMood(1)">😐 <span>Neutral</span></button>
+          <button class="mood-btn active" data-mood="2" onclick="pickMood(2)">🙂 <span>Clarity</span></button>
+        </div>
+      </div>
+
+      <button class="btn-primary stagger-4" style="margin-top:auto;" onclick="completeReflection()">
+        Submit Reflection
+      </button>
+    </section>
+
+    <!-- 6. DASHBOARD VIEW -->
+    <section class="view" id="view-dashboard">
+      <div class="stagger-1">
+        <div class="eyebrow">Step 05 • Self-Awareness Index</div>
+        <h2 class="section-title">Your Reflection Dashboard</h2>
+      </div>
+
+      <div class="bento-grid stagger-2">
+        <div class="bento-card bento-radial">
+          <span class="stat-k">Perspective Alignment</span>
+          <div class="ring-box">
+            <svg width="136" height="136" viewBox="0 0 136 136">
+              <circle cx="68" cy="68" r="56" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+              <circle id="progressRing" cx="68" cy="68" r="56" fill="none" stroke="#2563eb" stroke-width="10"
+                stroke-dasharray="351.8" stroke-dashoffset="98" stroke-linecap="round"
+                transform="rotate(-90 68 68)" style="transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1);"/>
+            </svg>
+            <div class="ring-value">
+              <span class="ring-num" id="scoreNum">72%</span>
+              <span class="ring-sub">Empathy</span>
+            </div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-secondary);">Updated from latest simulation</span>
+        </div>
+
+        <div class="stat-stack">
+          <div class="stat-box">
+            <div class="stat-k">Completed Mirrors</div>
+            <div class="stat-v" id="statCount">1 Session</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-k">Observed Tone Pattern</div>
+            <div class="stat-v" id="statTone">Constructive</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-k">Last Module</div>
+            <div class="stat-v" id="statLastMod">Conflict Sync</div>
+          </div>
+        </div>
+
+        <div class="insight-banner">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span id="dashboardSummary">You balanced self-expression with active listening across peer interactions.</span>
+        </div>
+      </div>
+
+      <button class="btn-primary stagger-3" style="margin-top:auto;" onclick="navigate('modules')">
+        Keep Exploring
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      </button>
+    </section>
+  </div>
+
+  <script>
+    const SCENARIOS = {
+      conflict: {
+        shortName: "Conflict Sync",
+        briefing: "A project deadline slipped and tensions rise during a quick team sync. Navigate blame, tone, and shared ownership.",
+        turns: [
+          {
+            incoming: [
+              { name: "Aarav", text: "The prototype deck still isn't updated. We present in two hours." },
+              { name: "Rhea", text: "I thought we agreed yesterday on who was handling the final layout?" }
+            ],
+            options: [
+              { tag: "DEFENSIVE", short: "Shift the blame back", full: "I already did my part. Maybe check your own tasks before blaming me.", tone: "defensive", echo: "“You sounded defensive and shifted blame before listening.”" },
+              { tag: "DISMISSIVE", short: "Minimize their stress", full: "It's honestly not a big deal, I'll fix it last minute like always.", tone: "arrogant", echo: "“You came across as dismissive of everyone else's urgency.”" },
+              { tag: "OWNERSHIP", short: "Acknowledge & split work", full: "My bad on the overlap—let's split the remaining slides right now.", tone: "empathetic", echo: "“You de-escalated tension and took shared ownership.”" }
+            ]
+          },
+          {
+            incoming: [
+              { name: "Aarav", text: "We just need clarity so we don't look unprepared in front of the panel." }
+            ],
+            options: [
+              { tag: "DOMINANT", short: "Claim superior insight", full: "Look, I know what the panel wants better than anyone here.", tone: "arrogant", echo: "“You dominated the room and shut down peer input.”" },
+              { tag: "PASSIVE", short: "Withdraw from decision", full: "Fine, just tell me what to do and I'll stay out of it.", tone: "passive", echo: "“Your sudden withdrawal left the team feeling disconnected.”" },
+              { tag: "ALIGN", short: "Propose clear roles", full: "Agreed. Aarav, take the research flow; I'll tighten the UI screens.", tone: "empathetic", echo: "“Others felt heard and supported under pressure.”" }
+            ]
+          }
+        ]
+      },
+      group: {
+        shortName: "Group Brainstorm",
+        briefing: "Brainstorming a new campaign with 3 peers. Notice how much airtime you claim versus space you hold for quieter voices.",
+        turns: [
+          {
+            incoming: [
+              { name: "Prachi", text: "I started sketching a community-driven angle, though it's still rough..." },
+              { name: "Kabir", text: "Interesting—how would that look on social?" }
+            ],
+            options: [
+              { tag: "TAKE OVER", short: "Pitch your idea instead", full: "Actually, let's scrap that. My concept is way stronger and already mapped out.", tone: "arrogant", echo: "“You dominated the space before Prachi could finish her thought.”" },
+              { tag: "BRUSH OFF", short: "Call it too generic", full: "Sounds a bit generic, honestly. Let's move on.", tone: "defensive", echo: "“You seemed dismissive—Prachi felt completely unheard.”" },
+              { tag: "INVITE IN", short: "Ask her to expand", full: "Tell us more about the community angle, Prachi—what sparked it?", tone: "empathetic", echo: "“You created psychological safety for quieter voices.”" }
+            ]
+          },
+          {
+            incoming: [
+              { name: "Prachi", text: "Thanks! It's based on real user stories rather than polished ads." }
+            ],
+            options: [
+              { tag: "ONE-UP", short: "Claim you thought of it", full: "Yeah, I thought of something similar months ago, just way more scalable.", tone: "arrogant", echo: "“Turning the spotlight back to yourself dulled team momentum.”" },
+              { tag: "NITPICK", short: "Focus on constraints", full: "Real stories take too long to edit. Keep it realistic.", tone: "defensive", echo: "“Your critique landed as rigid rather than constructive.”" },
+              { tag: "SYNTHESIZE", short: "Connect both ideas", full: "Pairing raw user stories with Kabir's social rollout could be huge.", tone: "empathetic", echo: "“You built on peer ideas instead of competing for credit.”" }
+            ]
+          }
+        ]
+      },
+      feedback: {
+        shortName: "Difficult Feedback",
+        briefing: "A peer shares candid critique about how you handled a recent client review. Observe your immediate reflex.",
+        turns: [
+          {
+            incoming: [
+              { name: "Neha", text: "Hey, during the call earlier, it felt like you talked over the client's concerns." }
+            ],
+            options: [
+              { tag: "JUSTIFY", short: "Explain why you did it", full: "They didn't understand the tech constraints—someone had to correct them.", tone: "arrogant", echo: "“Defending your intent made Neha feel her observation didn't matter.”" },
+              { tag: "DEFLECT", short: "Turn it back on Neha", full: "You could have jumped in too if you felt that way.", tone: "defensive", echo: "“Deflecting made feedback feel unsafe to bring to you.”" },
+              { tag: "RECEIVE", short: "Ask for specifics", full: "I didn't notice I was cutting them off. What part stood out most?", tone: "empathetic", echo: "“Your openness turned an awkward moment into real trust.”" }
+            ]
+          },
+          {
+            incoming: [
+              { name: "Neha", text: "Mostly when they asked about timeline flexibility. They seemed hesitant afterward." }
+            ],
+            options: [
+              { tag: "MINIMIZE", short: "Brush off client mood", full: "Clients are always hesitant. They'll get over it once they see results.", tone: "arrogant", echo: "“Dismissing client emotion read as overconfidence.”" },
+              { tag: "SELF-CRITIC", short: "Over-apologize", full: "Ugh, I'm terrible at client calls, I shouldn't even lead them.", tone: "passive", echo: "“Self-deprecation shifted focus onto comforting you.”" },
+              { tag: "ACT ON IT", short: "Commit to follow-up", full: "Good catch. I'll send a follow-up note today asking for their timeline thoughts.", tone: "empathetic", echo: "“You translated feedback into immediate accountability.”" }
+            ]
+          }
+        ]
+      }
+    };
+
+    const VIEW_ORDER = ['landing', 'modules', 'simulation', 'echowall', 'reflection', 'dashboard'];
+
+    let appState = {
+      currentView: 'landing',
+      module: 'conflict',
+      turnIndex: 0,
+      selectedOptionIdx: null,
+      recordedEchoes: [],
+      recordedTones: [],
+      mood: 2,
+      sessionsCount: 0,
+      empathyScore: 72
+    };
+
+    function navigate(viewName) {
+      appState.currentView = viewName;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${viewName}`).classList.add('active');
+
+      // Update Stepper
+      const activeIdx = VIEW_ORDER.indexOf(viewName);
+      document.querySelectorAll('.step-dot').forEach((dot, idx) => {
+        dot.classList.remove('active', 'completed');
+        if (idx === activeIdx) dot.classList.add('active');
+        else if (idx < activeIdx) dot.classList.add('completed');
+      });
+
+      // Contextual Header Action
+      const actionSlot = document.getElementById('headerAction');
+      if (viewName === 'modules') {
+        actionSlot.innerHTML = `<button class="icon-btn" onclick="navigate('landing')">← Home</button>`;
+      } else if (viewName === 'simulation') {
+        actionSlot.innerHTML = `<button class="icon-btn" onclick="navigate('modules')">← Exit</button>`;
+      } else if (viewName === 'dashboard') {
+        actionSlot.innerHTML = `<button class="icon-btn" onclick="navigate('landing')">Reset</button>`;
+      } else {
+        actionSlot.innerHTML = `<span class="mono" style="font-size:11px; color:var(--text-muted);">0${activeIdx + 1}/06</span>`;
+      }
+    }
+
+    function chooseModule(modKey) {
+      appState.module = modKey;
+      document.querySelectorAll('.module-tile').forEach(tile => {
+        tile.classList.toggle('selected', tile.dataset.mod === modKey);
+      });
+      document.getElementById('briefingText').textContent = SCENARIOS[modKey].briefing;
+    }
+
+    function beginSimulation() {
+      appState.turnIndex = 0;
+      appState.selectedOptionIdx = null;
+      appState.recordedEchoes = [];
+      appState.recordedTones = [];
+
+      const scenario = SCENARIOS[appState.module];
+      document.getElementById('simModuleLabel').textContent = `SIMULATION • ${scenario.shortName.toUpperCase()}`;
+      document.getElementById('chatViewport').innerHTML = '';
+
+      navigate('simulation');
+      renderTurn();
+    }
+
+    function renderTurn() {
+      const scenario = SCENARIOS[appState.module];
+      const turnData = scenario.turns[appState.turnIndex];
+      const viewport = document.getElementById('chatViewport');
+
+      document.getElementById('turnCounter').textContent = `TURN ${appState.turnIndex + 1} OF ${scenario.turns.length}`;
+
+      turnData.incoming.forEach(msg => {
+        const row = document.createElement('div');
+        row.className = 'bubble-row';
+        row.innerHTML = `
+          <div class="avatar">${msg.name[0]}</div>
+          <div class="bubble">
+            <span class="speaker-name">${msg.name}</span>
+            ${msg.text}
+          </div>
+        `;
+        viewport.appendChild(row);
+      });
+
+      viewport.scrollTop = viewport.scrollHeight;
+
+      const replyGrid = document.getElementById('replyGrid');
+      replyGrid.innerHTML = '';
+      appState.selectedOptionIdx = null;
+      document.getElementById('sendReplyBtn').disabled = true;
+      document.getElementById('selectedHint').textContent = 'Select an option below';
+
+      turnData.options.forEach((opt, idx) => {
+        const card = document.createElement('button');
+        card.className = 'reply-card';
+        card.innerHTML = `
+          <span class="reply-tag">${opt.tag}</span>
+          <span class="reply-preview">${opt.short}</span>
+        `;
+        card.onclick = () => {
+          appState.selectedOptionIdx = idx;
+          document.querySelectorAll('.reply-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          document.getElementById('sendReplyBtn').disabled = false;
+          document.getElementById('selectedHint').textContent = `“${opt.full}”`;
+        };
+        replyGrid.appendChild(card);
+      });
+    }
+
+    function commitReply() {
+      if (appState.selectedOptionIdx === null) return;
+      const scenario = SCENARIOS[appState.module];
+      const turnData = scenario.turns[appState.turnIndex];
+      const picked = turnData.options[appState.selectedOptionIdx];
+
+      appState.recordedEchoes.push({ quote: picked.echo, tone: picked.tone });
+      appState.recordedTones.push(picked.tone);
+
+      const viewport = document.getElementById('chatViewport');
+      const userRow = document.createElement('div');
+      userRow.className = 'bubble-row user';
+      userRow.innerHTML = `
+        <div class="avatar">You</div>
+        <div class="bubble">${picked.full}</div>
+      `;
+      viewport.appendChild(userRow);
+      viewport.scrollTop = viewport.scrollHeight;
+
+      appState.turnIndex++;
+      if (appState.turnIndex < scenario.turns.length) {
+        setTimeout(renderTurn, 380);
+      } else {
+        document.getElementById('sendReplyBtn').disabled = true;
+        setTimeout(() => {
+          populateEchoWall();
+          navigate('echowall');
+        }, 650);
+      }
+    }
+
+    function populateEchoWall() {
+      const stack = document.getElementById('echoStack');
+      const hasEmpathy = appState.recordedTones.includes('empathetic');
+      const summaryEcho = {
+        quote: hasEmpathy
+          ? "“Your willingness to pause and listen softened the room's tension.”"
+          : "“A brief pause before responding could have changed how your intent landed.”",
+        tone: hasEmpathy ? 'empathetic' : 'passive'
+      };
+
+      const items = [...appState.recordedEchoes, summaryEcho];
+      stack.innerHTML = items.map((item, idx) => `
+        <div class="echo-item tone-${item.tone}">
+          <div class="echo-header">
+            <span class="echo-source">Anonymous Peer Reflection • 0${idx + 1}</span>
+            <span class="echo-source">${item.tone}</span>
+          </div>
+          <div class="echo-quote">${item.quote}</div>
+        </div>
+      `).join('');
+    }
+
+    function pickPrompt(btn) {
+      document.querySelectorAll('.prompt-pill').forEach(p => p.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function pickMood(val) {
+      appState.mood = val;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.toggle('active', Number(btn.dataset.mood) === val);
+      });
+    }
+
+    function completeReflection() {
+      appState.sessionsCount += 1;
+      const empathyHits = appState.recordedTones.filter(t => t === 'empathetic').length;
+      const shift = empathyHits === 2 ? 9 : empathyHits === 1 ? 3 : -5;
+      appState.empathyScore = Math.min(98, Math.max(36, appState.empathyScore + shift));
+
+      const circumference = 351.8;
+      const offset = circumference - (appState.empathyScore / 100) * circumference;
+      document.getElementById('progressRing').style.strokeDashoffset = offset;
+      document.getElementById('scoreNum').textContent = `${appState.empathyScore}%`;
+
+      document.getElementById('statCount').textContent = `${appState.sessionsCount} ${appState.sessionsCount === 1 ? 'Session' : 'Sessions'}`;
+      document.getElementById('statTone').textContent = empathyHits >= 1 ? 'Constructive' : 'Guarded';
+      document.getElementById('statLastMod').textContent = SCENARIOS[appState.module].shortName;
+      document.getElementById('dashboardSummary').textContent = empathyHits >= 1
+        ? "You balanced self-expression with active listening across peer interactions."
+        : "Notice moments where defending your point crowded out how others experienced the exchange.";
+
+      navigate('dashboard');
+    }
+
+    // Initialize header counter
+    navigate('landing');
+  </script>
+</body>
+</html>
